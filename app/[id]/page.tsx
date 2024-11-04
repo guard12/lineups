@@ -3,13 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useParams } from 'next/navigation'
-import { nanoid } from 'nanoid';
 import { useDrag, useDrop } from 'react-dnd';
 
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-
-import { useCreateGame, useGetGame } from "@/app/hooks";
+import { useGetGame } from "@/app/hooks";
+import { Label } from '@/components/ui/label';
 
 type PlayerProps = {
   id: string;
@@ -19,6 +16,7 @@ type PlayerProps = {
 interface SpotProps {
   onDrop: (item: { id: string; name: string }) => void;
   player?: { id: string; name: string } | null;
+  position: string;
 }
 
 const DraggablePlayer: React.FC<PlayerProps> = ({ id, name }) => {
@@ -36,18 +34,15 @@ const DraggablePlayer: React.FC<PlayerProps> = ({ id, name }) => {
       ref={drag}
       style={{
         opacity: isDragging ? 0.5 : 1,
-        padding: '8px',
-        border: '1px solid gray',
-        margin: '4px',
-        backgroundColor: 'lightblue',
       }}
+      className="bg-slate-100 rounded-md p-2 mt-2"
     >
       {name}
     </div>
   );
 };
 
-const DroppableSpot: React.FC<SpotProps> = ({ onDrop, player }) => {
+const DroppableSpot: React.FC<SpotProps> = ({ onDrop, player, position }) => {
   const [{ isOver }, drop] = useDrop({
     accept: 'PLAYER',
     drop: (item: PlayerProps) => onDrop(item),
@@ -57,6 +52,8 @@ const DroppableSpot: React.FC<SpotProps> = ({ onDrop, player }) => {
   });
 
   return (
+    <div>
+      {position}
     <div
     // @ts-expect-error type error
       ref={drop}
@@ -64,7 +61,7 @@ const DroppableSpot: React.FC<SpotProps> = ({ onDrop, player }) => {
         width: '100px',
         height: '100px',
         border: '2px dashed gray',
-        margin: '4px',
+        margin: '12px',
         backgroundColor: isOver ? 'lightgreen' : 'white',
         display: 'flex',
         alignItems: 'center',
@@ -73,15 +70,13 @@ const DroppableSpot: React.FC<SpotProps> = ({ onDrop, player }) => {
     >
       {player ? player.name : 'Empty Spot'}
     </div>
+    </div>
   );
 };
 
 
 export default function CreateGame() {
   const params = useParams<{id: string}>();
-  const { createGame } = useCreateGame();
-  const [textareaValue, setTextareaValue] = useState('');
-  const [playersJson, setPlayersJson] = useState<PlayerProps[]>([]);
   const { game } = useGetGame({ id: params.id });
 
   const [players, setPlayers] = useState([]);
@@ -110,63 +105,35 @@ export default function CreateGame() {
     setPlayers((prevPlayers) => prevPlayers.filter((p: PlayerProps) => p.id !== player.id));
   };
 
-  const handleTextareaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const input = event.target.value;
-    setTextareaValue(input);
-    
-    // Split by new lines, filter out empty lines, and map to objects
-    const playersArray = input
-      .split('\n')
-      .map((name) => name.trim()) // Trim spaces from each name
-      .filter((name) => name) // Remove any empty lines
-      .map((name) => ({ id: nanoid(12), name })); // Create an object for each name
-
-    // Set players JSON array
-    setPlayersJson(playersArray);
-  };
-
-  const handleCreateGame = () => {
-    createGame({
-      game_date: new Date().toISOString(),
-      game_type: "friendly",
-      name: "Test Game",
-      lineup: JSON.stringify(playersJson),
-      team_a: "Team A",
-      team_b: "Team B",
-      id: params.id,
-     });
-  };
-
   return (
   <DndProvider backend={HTML5Backend}>
-    <div className="flex">
-    <div className="max-w-96">
-        <h1>Game</h1>
-        {players ? players.map((player: PlayerProps) => {
-          return <DraggablePlayer
-          key={player.id}
-          id={player.id}
-          name={player.name}
-        />
-        }) : <>
-          <Textarea rows={20} value={textareaValue} onChange={handleTextareaChange} placeholder="Enter one player name per line"/>
-          <Button onClick={() => handleCreateGame()}>Create</Button>
-        </>}
-    </div>
-    <div className='flex flex-col'>
-      <h3>Lineup</h3>
-      <div className="flex justify-center">
-        <DroppableSpot onDrop={(player) => handleDrop('spot1', player)} player={spots.spot1} />
+    <div className="flex mt-8">
+      <div className="w-1/6">
+          <Label>Players</Label>
+          {players && players.map((player: PlayerProps) => {
+            return <DraggablePlayer
+            key={player.id}
+            id={player.id}
+            name={player.name}
+          />
+          })}
       </div>
-      <div className="flex justify-center">
-        <DroppableSpot onDrop={(player) => handleDrop('spot2', player)} player={spots.spot2} />
-        <DroppableSpot onDrop={(player) => handleDrop('spot3', player)} player={spots.spot3} />
-      </div>
-      <div className="flex justify-center">
-        <DroppableSpot onDrop={(player) => handleDrop('spot4', player)} player={spots.spot4} />
-        <DroppableSpot onDrop={(player) => handleDrop('spot5', player)} player={spots.spot5} />
-        <DroppableSpot onDrop={(player) => handleDrop('spot6', player)} player={spots.spot6} />
-      </div>
+      <div className='flex flex-col flex-grow text-center text-'>
+      <h1 className="font-bold">🏒 Lineup</h1>
+      <div className="mt-4">
+        <div className="flex justify-center">
+          <DroppableSpot onDrop={(player) => handleDrop('spot1', player)} player={spots.spot1} position='G' />
+        </div>
+        <div className="flex justify-center">
+          <DroppableSpot onDrop={(player) => handleDrop('spot2', player)} player={spots.spot2} position="LD" />
+          <DroppableSpot onDrop={(player) => handleDrop('spot3', player)} player={spots.spot3} position="RD" />
+        </div>
+        <div className="flex justify-center">
+          <DroppableSpot onDrop={(player) => handleDrop('spot4', player)} player={spots.spot4} position="LW" />
+          <DroppableSpot onDrop={(player) => handleDrop('spot5', player)} player={spots.spot5} position="C" />
+          <DroppableSpot onDrop={(player) => handleDrop('spot6', player)} player={spots.spot6} position="RW" />
+        </div>
+        </div>
       </div>
     </div>
   </DndProvider>
