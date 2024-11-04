@@ -19,6 +19,8 @@
     "next": "15.0.2",
     "pg": "^8.13.1",
     "react": "19.0.0-rc-02c0e824-20241028",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "19.0.0-rc-02c0e824-20241028",
     "swr": "^2.2.5",
     "tailwind-merge": "^2.5.4",
