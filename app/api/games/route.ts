@@ -49,6 +49,6 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(mappedResponse);
   } catch (error) {
-    return NextResponse.json({ error: 'Error fetching the game' }, { status: 500 });
+    return NextResponse.json({ error: 'Error fetching the game', reason: error }, { status: 500 });
   }
 }
