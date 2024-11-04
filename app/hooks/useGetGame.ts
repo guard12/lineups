@@ -10,6 +10,10 @@ async function getGame(url: string) {
     },
   });
 
+  if (response.status === 404) {
+    return null;
+  };
+
   if (!response.ok) {
     const error = await response.json();
     return Promise.reject(error);
@@ -19,7 +23,10 @@ async function getGame(url: string) {
 }
 
 export function useGetGame({ id }: { id: string }) {
-  const { data, isLoading, error } = useSWR<GameDataResponse>(`/api/games?id=${encodeURIComponent(id)}`, getGame);
+  const { data, isLoading, error } = useSWR<GameDataResponse>(`/api/games?id=${encodeURIComponent(id)}`, getGame, {
+    revalidateOnFocus: false,
+    shouldRetryOnError: false,
+  });
 
   return {
     error,

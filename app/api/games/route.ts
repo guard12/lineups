@@ -32,6 +32,10 @@ export async function GET(request: NextRequest) {
 
     const game = result.rows[0];
 
+    if (!game) {
+      return NextResponse.json({ error: 'Game not found' });
+    }
+
     const mappedResponse = {
       id: game.id,
       name: game.name,
@@ -45,7 +49,6 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(mappedResponse);
   } catch (error) {
-    console.error('Error fetching the game:', error);
     return NextResponse.json({ error: 'Error fetching the game' }, { status: 500 });
   }
 }

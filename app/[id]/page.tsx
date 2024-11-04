@@ -82,9 +82,9 @@ export default function CreateGame() {
   const { createGame } = useCreateGame();
   const [textareaValue, setTextareaValue] = useState('');
   const [playersJson, setPlayersJson] = useState<PlayerProps[]>([]);
-  const { game, isLoading } = useGetGame({ id: params.id });
+  const { game } = useGetGame({ id: params.id });
 
-  const [players, setPlayers] = useState(game?.lineup || []);
+  const [players, setPlayers] = useState([]);
   const [spots, setSpots] = useState<{ [key: string]: { id: string; name: string } | null }>({
     spot1: null,
     spot2: null,
@@ -136,9 +136,6 @@ export default function CreateGame() {
       id: params.id,
      });
   };
-
-  if (isLoading) return null;
-  if (!game) return null;
 
   return (
   <DndProvider backend={HTML5Backend}>
