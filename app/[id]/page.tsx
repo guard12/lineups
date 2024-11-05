@@ -89,6 +89,9 @@ export default function CreateLineup() {
     setPlayers(game?.lineup || []);
   };
 
+  const isEnoughFor3Lines = players.length >= 12;
+  const isEnoughFor4Lines = players.length >= 17;
+
   return (
   <DndProvider backend={HTML5Backend}>
     <div className="flex mt-8">
@@ -241,6 +244,7 @@ export default function CreateLineup() {
         </div>
         
         <div className="flex gap-8 justify-center">
+        {isEnoughFor3Lines && 
           <div className="flex border border-slate-900 rounded-md flex-col mt-8 items-center p-4">
             <Label className="font-bold">Line 3</Label>
               <div className="flex">
@@ -287,10 +291,12 @@ export default function CreateLineup() {
                   onRemove={handleRemove}
                 />
               </div>
-          </div>
+            </div>
+          }
 
-          <div className="flex border border-slate-900 rounded-md flex-col mt-8 items-center p-4">
-            <Label className="font-bold">Line 4</Label>
+          {isEnoughFor4Lines &&
+            <div className="flex border border-slate-900 rounded-md flex-col mt-8 items-center p-4">
+              <Label className="font-bold">Line 4</Label>
               <div className="flex">
                 <DroppableSpot
                   id="spot9"
@@ -336,6 +342,8 @@ export default function CreateLineup() {
                 />
               </div>
             </div>
+          }
+
           </div>
         </div>
       </div>
