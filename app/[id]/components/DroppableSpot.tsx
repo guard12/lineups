@@ -41,7 +41,7 @@ export const DroppableSpot: React.FC<SpotProps> = ({ id, onDrop, player, positio
         height: isSubstitue ? '80px' : '100px',
         border: !player ? '1px dashed black' : undefined,
         margin: '12px',
-        backgroundColor: isOver ? 'lightgreen' : 'white',
+        backgroundColor: isOver ? 'lightgreen' : player ? 'lightblue' : 'white',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
