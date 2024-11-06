@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from 'react';
+
+import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { nanoid } from 'nanoid';
 import { CalendarIcon } from "@radix-ui/react-icons";
@@ -17,24 +18,27 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-import { useCreateGame } from "@/app/hooks";
+import { useCreateGame, useImportPlayers } from "@/app/hooks";
 import { gameNameAtom } from '@/app/atoms';
+import { ImportPlayers } from '../components/ImportPlayers';
 
-type PlayerProps = {
-  id: string;
-  name: string;
-};
+import type { HoldsportPlayer, PlayerProps } from "@/app/types";
 
 export default function CreateGame() {
   const params = useParams<{id: string}>();
   const { createGame } = useCreateGame();
   const router = useRouter();
+  const { players } = useImportPlayers();
   const [textareaValue, setTextareaValue] = useState('');
   const [homeTeam, setHomeTeam] = useState('');
   const [awayTeam, setAwayTeam] = useState('');
   const [date, setDate] = useState<Date>();
   const [playersJson, setPlayersJson] = useState<PlayerProps[]>([]);
   const [gameName, setGameName] = useAtom(gameNameAtom);
+
+  useEffect(() => {
+    setTextareaValue(players.map((player: HoldsportPlayer) => player.name).join('\n'));
+  }, [players]);
 
   const handleTextareaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const input = event.target.value;
@@ -47,7 +51,6 @@ export default function CreateGame() {
       .filter((name) => name) // Remove any empty lines
       .map((name) => ({ id: nanoid(12), name })); // Create an object for each name
 
-    // Set players JSON array
     setPlayersJson(playersArray);
   };
 
@@ -109,6 +112,9 @@ export default function CreateGame() {
         <Label>Add players</Label>
         <Textarea rows={20} value={textareaValue} onChange={handleTextareaChange} placeholder="Enter one player name per line" className="mt-2"/>
         <Button className="mt-4" onClick={() => handleCreateGame()}>Create</Button>
+      </div>
+      <div className="flex flex-col w-1/4 mt-8">
+        <ImportPlayers />
       </div>
     </div>
 );

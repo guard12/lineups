@@ -3,10 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { useParams } from 'next/navigation'
-import { UpdateIcon, TrashIcon } from "@radix-ui/react-icons"
+import { useParams } from 'next/navigation';
+import { UpdateIcon, TrashIcon, RocketIcon } from "@radix-ui/react-icons";
 
-import { useGetGame, useUltimateBravery } from "@/app/hooks";
+import { useGetGame, useUltimateBravery, usePatchGame } from "@/app/hooks";
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 
@@ -46,10 +46,23 @@ export default function CreateLineup() {
   const [players, setPlayers] = useState<PlayerProps[]>([]);
   const { randomizePlayers } = useUltimateBravery();
   const [spots, setSpots] = useState<Spots>(initialSpots);
+  const { patchGame } = usePatchGame();
 
   useEffect(() => {
     if (game) {
-      setPlayers(game.lineup);
+      const newSpots = { ...initialSpots };
+      const unassignedPlayers: PlayerProps[] = [];
+
+      game.lineup.forEach((player: PlayerProps) => {
+        if (player.position) {
+          newSpots[player.position] = player;
+        } else {
+          unassignedPlayers.push(player);
+        }
+      });
+
+      setSpots(newSpots);
+      setPlayers(unassignedPlayers);
     }
   }, [game]);
 
@@ -89,6 +102,23 @@ export default function CreateLineup() {
     setPlayers(game?.lineup || []);
   };
 
+  const handleSaveLineup = async () => {
+    if (!game) return;
+
+    const playersWithPositions = game.lineup.map((player) => {
+      const spotId = Object.keys(spots).find((spot) => spots[spot]?.id === player.id);
+      return {
+        ...player,
+        position: spotId,
+      };
+    });
+
+    await patchGame({
+      id: game?.id,
+      lineup: JSON.stringify(playersWithPositions),
+    });
+  };
+
   const isEnoughFor3Lines = players.length >= 12;
   const isEnoughFor4Lines = players.length >= 17;
 
@@ -121,6 +151,14 @@ export default function CreateLineup() {
           className="ml-2"
         >
           <TrashIcon /> Reset lineup
+        </Button>
+        <Button
+          onClick={handleSaveLineup}
+          variant="default"
+          size="sm"
+          className="ml-2"
+        >
+          <RocketIcon /> Save lineup
         </Button>
       </div>
       <div className='flex flex-col flex-grow text-center text-'>

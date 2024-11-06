@@ -1,4 +1,6 @@
-export type GameData = {
+import type { PlayerProps } from "./player";
+
+export type GameDataRequest = {
   id?: string;
   name: string;
   team_a: string;
@@ -17,7 +19,7 @@ export type GameDataResponse = {
   game_date: string;
   description?: string;
   game_type: 'friendly' | 'league';
-  lineup: [];
+  lineup: PlayerProps[];
 }
 
 export type Spots = {

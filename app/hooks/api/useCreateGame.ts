@@ -1,8 +1,8 @@
 import useSWRMutation from 'swr/mutation'
 
-import type { GameData } from '@/app/types/game';
+import type { GameDataRequest } from '@/app/types/game';
 
-async function createGame(url: string, { arg }: { arg: GameData }) {
+async function createGame(url: string, { arg }: { arg: GameDataRequest }) {
   const response = await fetch(url, {
     method: 'POST',
     body: JSON.stringify(arg),

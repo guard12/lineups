@@ -2,11 +2,11 @@ import { NextResponse } from 'next/server';
 import { pool } from '../../../db';
 
 import type { NextRequest } from 'next/server';
-import type { GameData } from '@/app/types/game';
+import type { GameDataRequest } from '@/app/types/game';
 
 export async function POST(request: NextRequest) {
   try {
-    const { name, team_a, team_b, game_date, description, game_type, lineup, id } = await request.json() as GameData;
+    const { name, team_a, team_b, game_date, description, game_type, lineup, id } = await request.json() as GameDataRequest;
 
     const result = await pool.query(
       'INSERT INTO games (id, name, team_a, team_b, game_date, description, game_type, lineup) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
@@ -52,3 +52,39 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Error fetching the game', reason: error }, { status: 500 });
   }
 }
+
+export async function PATCH(request: NextRequest) {
+  try {
+    const { id, lineup } = await request.json();
+
+    if (!id || !lineup) {
+      return NextResponse.json({ error: 'Missing id or lineup data' }, { status: 400 });
+    }
+
+    const result = await pool.query(
+      'UPDATE games SET lineup = $1 WHERE id = $2 RETURNING *',
+      [lineup, id]
+    );
+
+    const updatedGame = result.rows[0];
+
+    if (!updatedGame) {
+      return NextResponse.json({ error: 'Game not found' }, { status: 404 });
+    }
+
+    const mappedResponse = {
+      id: updatedGame.id,
+      name: updatedGame.name,
+      team_a: updatedGame.team_a,
+      team_b: updatedGame.team_b,
+      game_date: updatedGame.game_date,
+      description: updatedGame.description,
+      game_type: updatedGame.game_type,
+      lineup: updatedGame.lineup,
+    };
+
+    return NextResponse.json(mappedResponse);
+  } catch (error) {
+    return NextResponse.json({ error: 'Error updating the game', reason: error }, { status: 500 });
+  }
+};
