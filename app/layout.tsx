@@ -32,12 +32,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full">
-      <body className={`${latoLight.variable} ${latoRegular.variable} ${latoBold.variable} antialiased flex flex-col min-h-screen`}>
+      <body
+        className={`${latoLight.variable} ${latoRegular.variable} ${latoBold.variable} antialiased flex flex-col min-h-screen`}
+      >
         <Providers>
           <Navbar />
-          <main className="flex-grow">
-            {children}
-          </main>
+          <main className="flex-grow">{children}</main>
         </Providers>
         <Footer />
       </body>

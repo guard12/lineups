@@ -1,6 +1,4 @@
-import { useDrop } from 'react-dnd';
-
-import { Button } from '@/components/ui/button';
+import { useDrop, useDrag } from 'react-dnd';
 
 import type { PlayerProps } from '@/app/types';
 
@@ -29,30 +27,39 @@ export const DroppableSpot: React.FC<SpotProps> = ({ id, onDrop, player, positio
     }),
   });
 
+  const [{ isDragging }, drag] = useDrag({
+    type: 'PLAYER',
+    item: { id: player?.id, name: player?.name },
+    canDrag: !!player, // Only allow drag if there's a player in the spot
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  });
+
+  const handleRemove = () => {
+    if (player) onRemove(id);
+  };
+
   return (
     <div>
       {position}
       <div
-        // @ts-expect-error type error
-        ref={drop}
+        ref={(node) => {
+          drag(node);
+          drop(node);
+        }}
         style={{
           width: isSubstitue ? '80px' : '100px',
           height: isSubstitue ? '80px' : '100px',
           border: !player ? '1px dashed black' : undefined,
           margin: '12px',
           backgroundColor: isOver ? 'lightgreen' : player ? 'lightblue' : 'white',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          opacity: isDragging ? 0.5 : 1,
         }}
-        className="rounded-md flex flex-col"
+        className="rounded-md flex flex-col justify-center items-center"
+        onDoubleClick={handleRemove}
       >
         {player ? player.name : 'Empty Spot'}
-        {player && (
-          <Button onClick={() => onRemove(id)} variant="link">
-            [remove]
-          </Button>
-        )}
       </div>
     </div>
   );

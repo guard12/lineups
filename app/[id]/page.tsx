@@ -66,14 +66,34 @@ export default function CreateLineup() {
     }
   }, [game]);
 
-  const handleDrop = (spotId: string, player: { id: string; name: string }) => {
-    setSpots((prevSpots) => ({
-      ...prevSpots,
-      [spotId]: player,
-    }));
+  const handleDrop = (spotId: string, player: PlayerProps) => {
+    let originalSpotId: string | null = null;
 
-    // Optionally, remove player from the original list to avoid duplication
-    setPlayers((prevPlayers) => prevPlayers.filter((p: PlayerProps) => p.id !== player.id));
+    // Find the original spot the player was dragged from (if any)
+    for (const [spotId, spotPlayer] of Object.entries(spots)) {
+      if (spotPlayer && spotPlayer.id === player.id) {
+        originalSpotId = spotId;
+        break;
+      }
+    }
+
+    setSpots((prevSpots) => {
+      const updatedSpots = { ...prevSpots };
+
+      // Remove the player from their original spot if they were in one
+      if (originalSpotId) {
+        updatedSpots[originalSpotId] = null;
+      }
+
+      // Place the player in the target spot
+      updatedSpots[spotId] = player;
+
+      return updatedSpots;
+    });
+
+    setPlayers(
+      (prevList) => prevList.filter((p) => p.id !== player.id) // Remove dropped player from list
+    );
   };
 
   const handleSwap = (player: PlayerProps) => {
@@ -132,16 +152,21 @@ export default function CreateLineup() {
               return <DraggablePlayer key={player.id} id={player.id} name={player.name} />;
             })}
         </div>
-        <div className="flex flex-col gap-2">
-          <Button onClick={handleUltimateBravery} variant="default" size="sm" className="ml-2">
+        <div className="flex flex-col gap-2 ml-2">
+          <Button onClick={handleUltimateBravery} variant="default" size="sm">
             <UpdateIcon /> Ultimate bravery
           </Button>
-          <Button onClick={handleResetLineup} variant="default" size="sm" className="ml-2">
+          <Button onClick={handleResetLineup} variant="default" size="sm">
             <TrashIcon /> Reset lineup
           </Button>
-          <Button onClick={handleSaveLineup} variant="default" size="sm" className="ml-2">
+          <Button onClick={handleSaveLineup} variant="default" size="sm">
             <RocketIcon /> Save lineup
           </Button>
+          <div>
+            <p className="text-sm font-bold">How it works</p>
+            <p className="text-sm">Drag and drop players.</p>
+            <p className="text-sm">Double click to remove player.</p>
+          </div>
         </div>
         <div className="flex flex-col flex-grow text-center text-">
           <h1 className="font-bold">🏒 Lineup</h1>
