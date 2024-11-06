@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
 import { nanoid } from 'nanoid';
+import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
@@ -10,14 +10,13 @@ import { PlayersListTextArea } from '../players-list-textarea';
 import { useSimpleLineupPlayers } from '@/app/hooks';
 
 export const CreateSimpleLineupCard = () => {
-  const router = useRouter();
   const [textareaValue, setTextareaValue] = useState('');
-  const { players, setPlayersFromInput } = useSimpleLineupPlayers();
+  const { setPlayersFromInput } = useSimpleLineupPlayers();
+  const [generatedId, setGeneratedId] = useState('');
 
-  const handleNewGame = () => {
-    const id = nanoid(12);
-    router.push(`${id}`);
-  };
+  useEffect(() => {
+    setGeneratedId(nanoid(12));
+  }, []);
 
   const handleTextareaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const input = event.target.value;
@@ -38,8 +37,8 @@ export const CreateSimpleLineupCard = () => {
         <PlayersListTextArea handleTextareaChange={handleTextareaChange} textareaValue={textareaValue} />
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Button onClick={() => handleNewGame()} disabled={players.length <= 0}>
-          + New lineup
+        <Button asChild>
+          <Link href={`${generatedId}`}>+ New lineup</Link>
         </Button>
       </CardFooter>
     </Card>
