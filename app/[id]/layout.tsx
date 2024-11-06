@@ -3,5 +3,5 @@ export default function GameLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <div className="px-8">{children}</div>;
+  return <div>{children}</div>;
 }

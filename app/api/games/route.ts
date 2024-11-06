@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     const game = result.rows[0];
 
     if (!game) {
-      return NextResponse.json({ error: 'Game not found' });
+      return NextResponse.json({ error: 'Game not found' }, { status: 404 });
     }
 
     const mappedResponse = {

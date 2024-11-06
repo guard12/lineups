@@ -6,7 +6,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useParams } from 'next/navigation';
 import { UpdateIcon, TrashIcon, RocketIcon } from '@radix-ui/react-icons';
 
-import { useGetGame, useUltimateBravery, usePatchGame } from '@/app/hooks';
+import { useGetGame, useUltimateBravery, usePatchGame, useSimpleLineupPlayers } from '@/app/hooks';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 
@@ -42,13 +42,13 @@ const initialSpots: Spots = {
 
 export default function CreateLineup() {
   const params = useParams<{ id: string }>();
-  const { game } = useGetGame({ id: params.id });
-  const [players, setPlayers] = useState<PlayerProps[]>([]);
+  // const { game } = useGetGame({ id: params.id });
+  const { players, setPlayers } = useSimpleLineupPlayers();
   const { randomizePlayers } = useUltimateBravery();
   const [spots, setSpots] = useState<Spots>(initialSpots);
   const { patchGame } = usePatchGame();
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (game) {
       const newSpots = { ...initialSpots };
       const unassignedPlayers: PlayerProps[] = [];
@@ -64,7 +64,7 @@ export default function CreateLineup() {
       setSpots(newSpots);
       setPlayers(unassignedPlayers);
     }
-  }, [game]);
+  }, [game]); */
 
   const handleDrop = (spotId: string, player: PlayerProps) => {
     let originalSpotId: string | null = null;
@@ -113,18 +113,18 @@ export default function CreateLineup() {
 
   const handleResetLineup = () => {
     setSpots(initialSpots);
-    setPlayers(game?.lineup || []);
+    // setPlayers(game?.lineup || []);
   };
 
   const handleUltimateBravery = () => {
-    if (!game?.lineup) return;
+    /* if (!game?.lineup) return;
     const { spots: newSpots, remainingPlayers } = randomizePlayers({ spots, playerList: game.lineup });
     setSpots(newSpots);
-    setPlayers(remainingPlayers);
+    setPlayers(remainingPlayers);*/
   };
 
   const handleSaveLineup = async () => {
-    if (!game) return;
+    /* if (!game) return;
 
     const playersWithPositions = game.lineup.map((player) => {
       const spotId = Object.keys(spots).find((spot) => spots[spot]?.id === player.id);
@@ -137,7 +137,7 @@ export default function CreateLineup() {
     await patchGame({
       id: game?.id,
       lineup: JSON.stringify(playersWithPositions),
-    });
+    });*/
   };
 
   const isEnoughFor3Lines = players.length >= 12;
@@ -145,7 +145,7 @@ export default function CreateLineup() {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="flex mt-8">
+      <div className="flex">
         <div className="max-sm:w-1/2 w-1/6 border rounded-md p-2">
           <Label className="font-bold">Players</Label>
           {players &&
@@ -154,13 +154,13 @@ export default function CreateLineup() {
             })}
         </div>
         <div className="flex flex-col gap-2 ml-2">
-          <Button onClick={handleUltimateBravery} variant="default" size="sm" disabled={game?.lineup.length === 0}>
+          <Button onClick={handleUltimateBravery} variant="default" size="sm" disabled>
             <UpdateIcon /> Ultimate bravery
           </Button>
           <Button onClick={handleResetLineup} variant="default" size="sm">
             <TrashIcon /> Reset lineup
           </Button>
-          <Button onClick={handleSaveLineup} variant="default" size="sm" disabled={game?.lineup.length === 0}>
+          <Button onClick={handleSaveLineup} variant="default" size="sm" disabled>
             <RocketIcon /> Save lineup
           </Button>
           <div>
