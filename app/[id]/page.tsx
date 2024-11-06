@@ -148,7 +148,7 @@ export default function CreateLineup() {
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="flex">
-        <div className="max-sm:w-1/2 w-1/6 border rounded-md p-2">
+        <div className="min-w-48 sm:w-1/6 border rounded-md p-2">
           <Label className="font-bold">Players ({players.length})</Label>
           {players &&
             players.map((player: PlayerProps) => {
