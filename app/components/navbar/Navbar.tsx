@@ -28,7 +28,7 @@ export const Navbar = () => {
         </Link>
       </NavigationMenu>
       <Button variant="outline" size="icon" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
-        {theme === 'dark' && (
+        {(!theme || theme === 'dark') && (
           <Sun className="h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:-rotate-0 dark:scale-100" />
         )}
         {theme === 'light' && (
