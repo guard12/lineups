@@ -2,15 +2,21 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
 import { Providers } from '@/components/providers';
+import { Navbar } from './navbar';
 
-const geistSans = localFont({
-  src: './fonts/GeistVF.woff',
-  variable: '--font-geist-sans',
+const latoLight = localFont({
+  src: './fonts/Lato-Light.woff',
+  variable: '--font-lato-light',
   weight: '100 900',
 });
-const geistMono = localFont({
-  src: './fonts/GeistMonoVF.woff',
-  variable: '--font-geist-mono',
+const latoRegular = localFont({
+  src: './fonts/Lato-Regular.woff',
+  variable: '--font-lato-regular',
+  weight: '100 900',
+});
+const latoBold = localFont({
+  src: './fonts/Lato-Bold.woff',
+  variable: '--font-lato-bold',
   weight: '100 900',
 });
 
@@ -26,13 +32,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <div className="border-b">
-          <div className="flex h-16 items-center justify-center px-4">
-            <h1 className="font-bold">Lineups 🏒</h1>
-          </div>
-        </div>
-        <Providers>{children}</Providers>
+      <body className={`${latoLight.variable} ${latoRegular.variable} ${latoBold.variable} antialiased`}>
+        <Providers>
+          <Navbar />
+          {children}
+        </Providers>
       </body>
     </html>
   );
