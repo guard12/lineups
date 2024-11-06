@@ -22,11 +22,15 @@ async function getGame(url: string) {
   return response.json();
 }
 
-export function useGetGame({ id }: { id: string }) {
-  const { data, isLoading, error } = useSWR<GameDataResponse>(`/api/games?id=${encodeURIComponent(id)}`, getGame, {
-    revalidateOnFocus: false,
-    shouldRetryOnError: false,
-  });
+export function useGetGame({ id, mode }: { id: string; mode: 'pro' | 'beer' }) {
+  const { data, isLoading, error } = useSWR<GameDataResponse>(
+    mode === 'pro' ? `/api/games?id=${encodeURIComponent(id)}` : null,
+    getGame,
+    {
+      revalidateOnFocus: false,
+      shouldRetryOnError: false,
+    }
+  );
 
   return {
     error,

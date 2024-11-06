@@ -1,17 +1,16 @@
 'use client';
-import { useRouter } from 'next/navigation';
+
 import { nanoid } from 'nanoid';
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
+import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter, CardContent } from '@/components/ui/card';
 
 export const CreateAdvancedLineupCard = () => {
-  const router = useRouter();
-
   const handleNewGame = () => {
     const id = nanoid(12);
-    router.push(`${id}/create`);
+    return `${id}/create`;
   };
 
   return (
@@ -28,8 +27,8 @@ export const CreateAdvancedLineupCard = () => {
       </CardContent>
       <CardContent className="text-center text-orange-600">Under development</CardContent>
       <CardFooter className="flex justify-between">
-        <Button onClick={() => handleNewGame()} disabled>
-          + New lineup
+        <Button asChild>
+          <Link href={handleNewGame()}>+ New lineup</Link>
         </Button>
       </CardFooter>
     </Card>

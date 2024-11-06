@@ -41,14 +41,14 @@ const initialSpots: Spots = {
 };
 
 export default function CreateLineup() {
-  const params = useParams<{ id: string }>();
-  // const { game } = useGetGame({ id: params.id });
+  const params = useParams<{ id: string; mode: 'pro' | 'beer' }>();
+  const { game } = useGetGame({ id: params.id, mode: params.mode });
   const { players, setPlayers } = useSimpleLineupPlayers();
   const { randomizePlayers } = useUltimateBravery();
   const [spots, setSpots] = useState<Spots>(initialSpots);
   const { patchGame } = usePatchGame();
 
-  /* useEffect(() => {
+  useEffect(() => {
     if (game) {
       const newSpots = { ...initialSpots };
       const unassignedPlayers: PlayerProps[] = [];
@@ -64,7 +64,7 @@ export default function CreateLineup() {
       setSpots(newSpots);
       setPlayers(unassignedPlayers);
     }
-  }, [game]); */
+  }, [game, setPlayers]);
 
   const handleDrop = (spotId: string, player: PlayerProps) => {
     let originalSpotId: string | null = null;
@@ -113,18 +113,18 @@ export default function CreateLineup() {
 
   const handleResetLineup = () => {
     setSpots(initialSpots);
-    // setPlayers(game?.lineup || []);
+    setPlayers(game?.lineup || []);
   };
 
   const handleUltimateBravery = () => {
-    /* if (!game?.lineup) return;
+    if (!game?.lineup) return;
     const { spots: newSpots, remainingPlayers } = randomizePlayers({ spots, playerList: game.lineup });
     setSpots(newSpots);
-    setPlayers(remainingPlayers);*/
+    setPlayers(remainingPlayers);
   };
 
   const handleSaveLineup = async () => {
-    /* if (!game) return;
+    if (!game) return;
 
     const playersWithPositions = game.lineup.map((player) => {
       const spotId = Object.keys(spots).find((spot) => spots[spot]?.id === player.id);
@@ -137,7 +137,7 @@ export default function CreateLineup() {
     await patchGame({
       id: game?.id,
       lineup: JSON.stringify(playersWithPositions),
-    });*/
+    });
   };
 
   const isEnoughFor3Lines = players.length >= 12;
@@ -154,13 +154,13 @@ export default function CreateLineup() {
             })}
         </div>
         <div className="flex flex-col gap-2 ml-2">
-          <Button onClick={handleUltimateBravery} variant="default" size="sm" disabled>
+          <Button onClick={handleUltimateBravery} variant="default" size="sm" disabled={!game}>
             <UpdateIcon /> Ultimate bravery
           </Button>
           <Button onClick={handleResetLineup} variant="default" size="sm">
             <TrashIcon /> Reset lineup
           </Button>
-          <Button onClick={handleSaveLineup} variant="default" size="sm" disabled>
+          <Button onClick={handleSaveLineup} variant="default" size="sm" disabled={!game}>
             <RocketIcon /> Save lineup
           </Button>
           <div>

@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { nanoid } from 'nanoid';
 import { CalendarIcon } from '@radix-ui/react-icons';
 import { format } from 'date-fns';
 import { useAtom } from 'jotai';
+import Link from 'next/link';
 
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -23,7 +24,6 @@ import type { HoldsportPlayer, PlayerProps } from '@/app/types';
 export default function CreateGame() {
   const params = useParams<{ id: string }>();
   const { createGame } = useCreateGame();
-  const router = useRouter();
   const { players } = useImportPlayers();
   const [textareaValue, setTextareaValue] = useState('');
   const [homeTeam, setHomeTeam] = useState('');
@@ -61,7 +61,6 @@ export default function CreateGame() {
       team_b: awayTeam,
       id: params.id,
     });
-    router.push(`/${params.id}`);
   };
 
   return (
@@ -126,8 +125,8 @@ export default function CreateGame() {
           placeholder="Enter one player name per line"
           className="mt-2"
         />
-        <Button className="mt-4" onClick={() => handleCreateGame()}>
-          Create
+        <Button className="mt-4" asChild onClick={() => handleCreateGame()}>
+          <Link href={`${params.id}?mode=pro`}>Create</Link>
         </Button>
       </div>
       <div className="flex flex-col w-1/4 mt-8">
