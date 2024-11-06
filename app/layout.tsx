@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
 import { Providers } from '@/components/providers';
-import { Navbar } from './navbar';
+import { Navbar, Footer } from './components';
 
 const latoLight = localFont({
   src: './fonts/Lato-Light.woff',
@@ -31,12 +31,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${latoLight.variable} ${latoRegular.variable} ${latoBold.variable} antialiased`}>
+    <html lang="en" className="h-full">
+      <body className={`${latoLight.variable} ${latoRegular.variable} ${latoBold.variable} antialiased flex flex-col min-h-screen`}>
         <Providers>
           <Navbar />
-          {children}
+          <main className="flex-grow">
+            {children}
+          </main>
         </Providers>
+        <Footer />
       </body>
     </html>
   );
