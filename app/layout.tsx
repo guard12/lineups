@@ -31,7 +31,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full">
+    <html lang="en" className="h-full" suppressHydrationWarning>
       <body
         className={`${latoLight.variable} ${latoRegular.variable} ${latoBold.variable} antialiased flex flex-col min-h-screen`}
       >

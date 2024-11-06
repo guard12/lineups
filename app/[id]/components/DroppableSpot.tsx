@@ -40,6 +40,12 @@ export const DroppableSpot: React.FC<SpotProps> = ({ id, onDrop, player, positio
     if (player) onRemove(id);
   };
 
+  const bgColor = isOver
+    ? 'bg-green-100 dark:bg-green-900'
+    : player
+      ? 'bg-blue-100 dark:bg-blue-900'
+      : 'bg-white dark:bg-slate-800';
+
   return (
     <div>
       {position}
@@ -53,10 +59,9 @@ export const DroppableSpot: React.FC<SpotProps> = ({ id, onDrop, player, positio
           height: isSubstitue ? '80px' : '100px',
           border: !player ? '1px dashed black' : undefined,
           margin: '12px',
-          backgroundColor: isOver ? 'lightgreen' : player ? 'lightblue' : 'white',
           opacity: isDragging ? 0.5 : 1,
         }}
-        className="rounded-md flex flex-col justify-center items-center"
+        className={`rounded-md flex flex-col justify-center items-center ${bgColor}`}
         onDoubleClick={handleRemove}
       >
         {player ? player.name : 'Empty Spot'}

@@ -18,7 +18,7 @@ export const DraggablePlayer: React.FC<PlayerProps> = ({ id, name }) => {
       style={{
         opacity: isDragging ? 0.5 : 1,
       }}
-      className="bg-slate-100 rounded-md p-2 mt-2"
+      className="bg-slate-100 dark:bg-slate-900 rounded-md p-2 mt-2"
     >
       {name}
     </div>
