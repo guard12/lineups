@@ -1,6 +1,6 @@
-import { atom, useAtom } from "jotai";
+import { atom, useAtom } from 'jotai';
 
-import type { HoldsportPlayer } from "@/app/types";
+import type { HoldsportPlayer } from '@/app/types';
 
 const playersAtom = atom<HoldsportPlayer[]>([]);
 
@@ -15,4 +15,4 @@ export const useImportPlayers = () => {
     players,
     importPlayers,
   };
-}
+};

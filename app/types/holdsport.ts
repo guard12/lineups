@@ -1,4 +1,3 @@
-
 export type HoldsportTeam = {
   id: number;
   name: string;
@@ -7,7 +6,7 @@ export type HoldsportTeam = {
 export type HoldsportPlayer = {
   id: number;
   name: string;
-  status: 'Unknown' | 'Selected' | 'Not attending' | 'Attending' | 'Not attending'; 
+  status: 'Unknown' | 'Selected' | 'Not attending' | 'Attending' | 'Not attending';
 };
 
 export type HoldSportActivity = {

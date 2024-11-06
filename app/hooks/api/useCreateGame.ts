@@ -1,4 +1,4 @@
-import useSWRMutation from 'swr/mutation'
+import useSWRMutation from 'swr/mutation';
 
 import type { GameDataRequest } from '@/app/types/game';
 
@@ -20,10 +20,7 @@ async function createGame(url: string, { arg }: { arg: GameDataRequest }) {
 }
 
 export function useCreateGame() {
-  const { trigger, error, isMutating, reset, data } = useSWRMutation(
-    `/api/games`,
-    createGame,
-  );
+  const { trigger, error, isMutating, reset, data } = useSWRMutation(`/api/games`, createGame);
 
   return {
     error,

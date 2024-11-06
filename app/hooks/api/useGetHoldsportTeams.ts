@@ -1,4 +1,4 @@
-import useSWRMutation from 'swr/mutation'
+import useSWRMutation from 'swr/mutation';
 
 import type { HoldsportTeam } from '@/app/types';
 
@@ -12,7 +12,7 @@ async function getTeams(url: string, { arg }: { arg: { email: string; pw: string
 
   if (response.status === 404) {
     return null;
-  };
+  }
 
   if (!response.ok) {
     const error = await response.json();

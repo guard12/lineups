@@ -1,4 +1,4 @@
-import useSWR from 'swr'
+import useSWR from 'swr';
 
 import type { GameDataResponse } from '@/app/types/game';
 
@@ -12,7 +12,7 @@ async function getGame(url: string) {
 
   if (response.status === 404) {
     return null;
-  };
+  }
 
   if (!response.ok) {
     const error = await response.json();

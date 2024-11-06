@@ -1,10 +1,10 @@
-'use client'
- 
-import { useRouter } from 'next/navigation'
-import { nanoid } from 'nanoid';
-import { useAtom } from 'jotai'
+'use client';
 
-import { Button } from "@/components/ui/button";
+import { useRouter } from 'next/navigation';
+import { nanoid } from 'nanoid';
+import { useAtom } from 'jotai';
+
+import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -17,7 +17,7 @@ export default function Home() {
   const handleNewGame = () => {
     const id = nanoid(12);
     router.push(`${id}/create`);
-  }
+  };
 
   return (
     <div className="flex justify-center mt-8">
@@ -31,7 +31,12 @@ export default function Home() {
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="name">Name of the game</Label>
-                <Input id="name" placeholder="🍺 Beer competition" value={gameName} onChange={(e) => setGameName(e.target.value)}/>
+                <Input
+                  id="name"
+                  placeholder="🍺 Beer competition"
+                  value={gameName}
+                  onChange={(e) => setGameName(e.target.value)}
+                />
               </div>
             </div>
           </form>
@@ -41,5 +46,5 @@ export default function Home() {
         </CardFooter>
       </Card>
     </div>
-);
+  );
 }

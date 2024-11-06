@@ -1,4 +1,4 @@
-import useSWRMutation from 'swr/mutation'
+import useSWRMutation from 'swr/mutation';
 
 import type { GameDataRequest } from '@/app/types/game';
 
@@ -20,10 +20,7 @@ async function patchGame(url: string, { arg }: { arg: Pick<GameDataRequest, 'id'
 }
 
 export function usePatchGame() {
-  const { trigger, error, isMutating, reset, data } = useSWRMutation(
-    `/api/games`,
-    patchGame,
-  );
+  const { trigger, error, isMutating, reset, data } = useSWRMutation(`/api/games`, patchGame);
 
   return {
     error,

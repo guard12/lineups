@@ -1,3 +1,10 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"]
+  "extends": ["next/core-web-vitals", "next/typescript", "prettier"],
+  "rules": {
+    "no-console": "warn",
+    "prettier/prettier": "warn"
+  },
+  "plugins": [
+    "prettier"
+  ]
 }

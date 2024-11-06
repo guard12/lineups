@@ -6,7 +6,8 @@ import type { GameDataRequest } from '@/app/types/game';
 
 export async function POST(request: NextRequest) {
   try {
-    const { name, team_a, team_b, game_date, description, game_type, lineup, id } = await request.json() as GameDataRequest;
+    const { name, team_a, team_b, game_date, description, game_type, lineup, id } =
+      (await request.json()) as GameDataRequest;
 
     const result = await pool.query(
       'INSERT INTO games (id, name, team_a, team_b, game_date, description, game_type, lineup) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
@@ -15,20 +16,16 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(result.rows[0]);
   } catch (error) {
-    console.error('Error creating game:', error);
-    return NextResponse.json({ error: 'Error creating game' }, { status: 500 });
+    return NextResponse.json({ error: 'Error creating game', reason: error }, { status: 500 });
   }
 }
 
 export async function GET(request: NextRequest) {
   try {
-    const searchParams = request.nextUrl.searchParams
-    const id = searchParams.get('id')
+    const searchParams = request.nextUrl.searchParams;
+    const id = searchParams.get('id');
 
-    const result = await pool.query(
-      'SELECT * FROM games WHERE id = $1',
-      [id]
-    );
+    const result = await pool.query('SELECT * FROM games WHERE id = $1', [id]);
 
     const game = result.rows[0];
 
@@ -61,10 +58,7 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: 'Missing id or lineup data' }, { status: 400 });
     }
 
-    const result = await pool.query(
-      'UPDATE games SET lineup = $1 WHERE id = $2 RETURNING *',
-      [lineup, id]
-    );
+    const result = await pool.query('UPDATE games SET lineup = $1 WHERE id = $2 RETURNING *', [lineup, id]);
 
     const updatedGame = result.rows[0];
 
@@ -87,4 +81,4 @@ export async function PATCH(request: NextRequest) {
   } catch (error) {
     return NextResponse.json({ error: 'Error updating the game', reason: error }, { status: 500 });
   }
-};
+}

@@ -11,7 +11,7 @@ export const useUltimateBravery = () => {
   };
 
   // Randomize players into spots
-  const randomizePlayers = ({ spots, playerList }: { spots: Spots, playerList: PlayerProps[] }) => {
+  const randomizePlayers = ({ spots, playerList }: { spots: Spots; playerList: PlayerProps[] }) => {
     const shuffledPlayers = shuffleArray(playerList);
     const newSpots = { ...spots };
     const remainingPlayers = [...playerList];
