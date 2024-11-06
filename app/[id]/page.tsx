@@ -111,15 +111,16 @@ export default function CreateLineup() {
     }
   };
 
-  const handleUltimateBravery = () => {
-    const { spots: newSpots, remainingPlayers } = randomizePlayers({ spots, playerList: players });
-    setSpots(newSpots);
-    setPlayers(remainingPlayers);
-  };
-
   const handleResetLineup = () => {
     setSpots(initialSpots);
     setPlayers(game?.lineup || []);
+  };
+
+  const handleUltimateBravery = () => {
+    if (!game?.lineup) return;
+    const { spots: newSpots, remainingPlayers } = randomizePlayers({ spots, playerList: game.lineup });
+    setSpots(newSpots);
+    setPlayers(remainingPlayers);
   };
 
   const handleSaveLineup = async () => {
@@ -153,13 +154,13 @@ export default function CreateLineup() {
             })}
         </div>
         <div className="flex flex-col gap-2 ml-2">
-          <Button onClick={handleUltimateBravery} variant="default" size="sm">
+          <Button onClick={handleUltimateBravery} variant="default" size="sm" disabled={game?.lineup.length === 0}>
             <UpdateIcon /> Ultimate bravery
           </Button>
           <Button onClick={handleResetLineup} variant="default" size="sm">
             <TrashIcon /> Reset lineup
           </Button>
-          <Button onClick={handleSaveLineup} variant="default" size="sm">
+          <Button onClick={handleSaveLineup} variant="default" size="sm" disabled={game?.lineup.length === 0}>
             <RocketIcon /> Save lineup
           </Button>
           <div>
