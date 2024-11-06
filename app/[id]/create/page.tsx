@@ -126,7 +126,7 @@ export default function CreateGame() {
           className="mt-2"
         />
         <Button className="mt-4" asChild onClick={() => handleCreateGame()}>
-          <Link href={`${params.id}?mode=pro`}>Create</Link>
+          <Link href={`?mode=pro`}>Create</Link>
         </Button>
       </div>
       <div className="flex flex-col w-1/4 mt-8">

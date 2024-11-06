@@ -12,8 +12,19 @@ export const useUltimateBravery = () => {
 
   // Randomize players into spots
   const randomizePlayers = ({ spots, playerList }: { spots: Spots; playerList: PlayerProps[] }) => {
+    const numberOfPlayers = playerList.length;
+    const maxSpots = Math.min(numberOfPlayers, Object.keys(spots).length);
+
+    // Create a new spots object with only the necessary number of spots
+    const adjustedSpots = Object.keys(spots)
+      .slice(0, maxSpots)
+      .reduce((acc, key) => {
+        acc[key] = spots[key];
+        return acc;
+      }, {} as Spots);
+
     const shuffledPlayers = shuffleArray(playerList);
-    const newSpots = { ...spots };
+    const newSpots = { ...adjustedSpots };
     const remainingPlayers = [...playerList];
 
     // Assign each spot a player until no more players or spots

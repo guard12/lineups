@@ -22,7 +22,7 @@ async function getGame(url: string) {
   return response.json();
 }
 
-export function useGetGame({ id, mode }: { id: string; mode: 'pro' | 'beer' }) {
+export function useGetGame({ id, mode }: { id: string; mode: string | null }) {
   const { data, isLoading, error } = useSWR<GameDataResponse>(
     mode === 'pro' ? `/api/games?id=${encodeURIComponent(id)}` : null,
     getGame,

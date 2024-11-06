@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { UpdateIcon, TrashIcon, RocketIcon } from '@radix-ui/react-icons';
 
 import { useGetGame, useUltimateBravery, usePatchGame, useSimpleLineupPlayers } from '@/app/hooks';
@@ -41,12 +41,17 @@ const initialSpots: Spots = {
 };
 
 export default function CreateLineup() {
-  const params = useParams<{ id: string; mode: 'pro' | 'beer' }>();
-  const { game } = useGetGame({ id: params.id, mode: params.mode });
+  const params = useParams<{ id: string }>();
+  const searchParams = useSearchParams();
+  const { game } = useGetGame({ id: params.id, mode: searchParams.get('mode') });
   const { players, setPlayers } = useSimpleLineupPlayers();
   const { randomizePlayers } = useUltimateBravery();
   const [spots, setSpots] = useState<Spots>(initialSpots);
   const { patchGame } = usePatchGame();
+
+  const gameLineup = game?.lineup.length || 0;
+  const isEnoughFor3Lines = players.length >= 12 || gameLineup >= 12;
+  const isEnoughFor4Lines = players.length >= 17 || gameLineup >= 17;
 
   useEffect(() => {
     if (game) {
@@ -140,14 +145,11 @@ export default function CreateLineup() {
     });
   };
 
-  const isEnoughFor3Lines = players.length >= 12;
-  const isEnoughFor4Lines = players.length >= 17;
-
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="flex">
         <div className="max-sm:w-1/2 w-1/6 border rounded-md p-2">
-          <Label className="font-bold">Players</Label>
+          <Label className="font-bold">Players ({players.length})</Label>
           {players &&
             players.map((player: PlayerProps) => {
               return <DraggablePlayer key={player.id} id={player.id} name={player.name} />;
@@ -214,26 +216,26 @@ export default function CreateLineup() {
                 </div>
                 <div className="flex">
                   <DroppableSpot
-                    id="spot11"
+                    id="spot5"
                     onSwap={(existingPlayer) => handleSwap(existingPlayer)}
                     onDrop={handleDrop}
-                    player={spots.spot11}
+                    player={spots.spot5}
                     position="LW"
                     onRemove={handleRemove}
                   />
                   <DroppableSpot
-                    id="spot12"
+                    id="spot6"
                     onSwap={(existingPlayer) => handleSwap(existingPlayer)}
                     onDrop={handleDrop}
-                    player={spots.spot12}
+                    player={spots.spot6}
                     position="C"
                     onRemove={handleRemove}
                   />
                   <DroppableSpot
-                    id="spot13"
+                    id="spot7"
                     onSwap={(existingPlayer) => handleSwap(existingPlayer)}
                     onDrop={handleDrop}
-                    player={spots.spot13}
+                    player={spots.spot7}
                     position="RW"
                     onRemove={handleRemove}
                   />
@@ -244,44 +246,44 @@ export default function CreateLineup() {
                 <Label className="font-bold">Line 2</Label>
                 <div className="flex">
                   <DroppableSpot
-                    id="spot5"
+                    id="spot8"
                     onSwap={(existingPlayer) => handleSwap(existingPlayer)}
                     onDrop={handleDrop}
-                    player={spots.spot5}
+                    player={spots.spot8}
                     position="LD"
                     onRemove={handleRemove}
                   />
                   <DroppableSpot
-                    id="spot6"
+                    id="spot9"
                     onSwap={(existingPlayer) => handleSwap(existingPlayer)}
                     onDrop={handleDrop}
-                    player={spots.spot6}
+                    player={spots.spot9}
                     position="RD"
                     onRemove={handleRemove}
                   />
                 </div>
                 <div className="flex">
                   <DroppableSpot
-                    id="spot14"
+                    id="spot10"
                     onSwap={(existingPlayer) => handleSwap(existingPlayer)}
                     onDrop={handleDrop}
-                    player={spots.spot14}
+                    player={spots.spot10}
                     position="LW"
                     onRemove={handleRemove}
                   />
                   <DroppableSpot
-                    id="spot15"
+                    id="spot11"
                     onSwap={(existingPlayer) => handleSwap(existingPlayer)}
                     onDrop={handleDrop}
-                    player={spots.spot15}
+                    player={spots.spot11}
                     position="C"
                     onRemove={handleRemove}
                   />
                   <DroppableSpot
-                    id="spot16"
+                    id="spot12"
                     onSwap={(existingPlayer) => handleSwap(existingPlayer)}
                     onDrop={handleDrop}
-                    player={spots.spot16}
+                    player={spots.spot12}
                     position="RW"
                     onRemove={handleRemove}
                   />
@@ -295,44 +297,44 @@ export default function CreateLineup() {
                   <Label className="font-bold">Line 3</Label>
                   <div className="flex">
                     <DroppableSpot
-                      id="spot7"
+                      id="spot13"
                       onSwap={(existingPlayer) => handleSwap(existingPlayer)}
                       onDrop={handleDrop}
-                      player={spots.spot7}
+                      player={spots.spot13}
                       position="LD"
                       onRemove={handleRemove}
                     />
                     <DroppableSpot
-                      id="spot8"
+                      id="spot14"
                       onSwap={(existingPlayer) => handleSwap(existingPlayer)}
                       onDrop={handleDrop}
-                      player={spots.spot8}
+                      player={spots.spot14}
                       position="RD"
                       onRemove={handleRemove}
                     />
                   </div>
                   <div className="flex">
                     <DroppableSpot
-                      id="spot17"
+                      id="spot15"
                       onSwap={(existingPlayer) => handleSwap(existingPlayer)}
                       onDrop={handleDrop}
-                      player={spots.spot17}
+                      player={spots.spot15}
                       position="LW"
                       onRemove={handleRemove}
                     />
                     <DroppableSpot
-                      id="spot18"
+                      id="spot16"
                       onSwap={(existingPlayer) => handleSwap(existingPlayer)}
                       onDrop={handleDrop}
-                      player={spots.spot18}
+                      player={spots.spot16}
                       position="C"
                       onRemove={handleRemove}
                     />
                     <DroppableSpot
-                      id="spot19"
+                      id="spot17"
                       onSwap={(existingPlayer) => handleSwap(existingPlayer)}
                       onDrop={handleDrop}
-                      player={spots.spot19}
+                      player={spots.spot17}
                       position="RW"
                       onRemove={handleRemove}
                     />
@@ -345,7 +347,7 @@ export default function CreateLineup() {
                   <Label className="font-bold">Line 4</Label>
                   <div className="flex">
                     <DroppableSpot
-                      id="spot9"
+                      id="spot18"
                       onSwap={(existingPlayer) => handleSwap(existingPlayer)}
                       onDrop={handleDrop}
                       player={spots.spot9}
@@ -353,7 +355,7 @@ export default function CreateLineup() {
                       onRemove={handleRemove}
                     />
                     <DroppableSpot
-                      id="spot10"
+                      id="spot19"
                       onSwap={(existingPlayer) => handleSwap(existingPlayer)}
                       onDrop={handleDrop}
                       player={spots.spot10}
