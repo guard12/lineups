@@ -171,7 +171,7 @@ export default function CreateLineup() {
             <p className="text-sm">Double click to remove player.</p>
           </div>
         </div>
-        <div className="flex flex-col flex-grow text-center text-">
+        <div className="flex flex-col flex-grow text-center">
           <h1 className="font-bold">🏒 Lineup</h1>
           <div className="mt-4">
             <div className="flex justify-center">
