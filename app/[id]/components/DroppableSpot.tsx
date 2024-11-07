@@ -1,6 +1,7 @@
 import { useDrop, useDrag } from 'react-dnd';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Label } from '@/components/ui/label';
 import type { PlayerProps } from '@/app/types';
 
 type SpotProps = {
@@ -66,14 +67,14 @@ export const DroppableSpot: React.FC<SpotProps> = ({ id, onDrop, player, positio
         onDoubleClick={handleRemove}
       >
         {player ? (
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center gap-1">
             {player.profile_picture_path && (
               <Avatar>
                 <AvatarImage src={`https://api.holdsport.dk${player.profile_picture_path}`} />
                 <AvatarFallback>PL</AvatarFallback>
               </Avatar>
             )}
-            {player.name}
+            <Label>{player.name}</Label>
           </div>
         ) : (
           'Empty Spot'
