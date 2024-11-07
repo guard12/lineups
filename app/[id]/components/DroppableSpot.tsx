@@ -31,7 +31,7 @@ export const DroppableSpot: React.FC<SpotProps> = ({ id, onDrop, player, positio
 
   const [{ isDragging }, drag] = useDrag({
     type: 'PLAYER',
-    item: { id: player?.id, name: player?.name, profilePictureUrl: player?.profile_picture_path },
+    item: { id: player?.id, name: player?.name, profile_picture_path: player?.profile_picture_path },
     canDrag: !!player, // Only allow drag if there's a player in the spot
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
