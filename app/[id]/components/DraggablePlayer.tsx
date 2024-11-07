@@ -2,10 +2,10 @@ import { useDrag } from 'react-dnd';
 
 import type { PlayerProps } from '@/app/types';
 
-export const DraggablePlayer: React.FC<PlayerProps> = ({ id, name }) => {
+export const DraggablePlayer: React.FC<PlayerProps> = ({ id, name, profile_picture_path }) => {
   const [{ isDragging }, drag] = useDrag({
     type: 'PLAYER',
-    item: { id, name },
+    item: { id, name, profile_picture_path },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),

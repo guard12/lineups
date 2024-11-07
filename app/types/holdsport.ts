@@ -4,6 +4,7 @@ export type HoldsportTeam = {
 };
 
 export type HoldsportPlayer = {
+  user_id: number;
   id: number;
   name: string;
   status: 'Unknown' | 'Selected' | 'Not attending' | 'Attending' | 'Not attending';
@@ -15,4 +16,10 @@ export type HoldSportActivity = {
   comment: string;
   activities_users: HoldsportPlayer[];
   event_type: 'Udebanekamp' | 'Hjemmebanekamp i KSF';
+};
+
+export type HoldsportTeamMember = {
+  id: number;
+  name: string;
+  profile_picture_path: string;
 };

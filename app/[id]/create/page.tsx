@@ -51,12 +51,11 @@ export default function CreateGame() {
   };
 
   const handleCreateGame = async () => {
-    if (!date || !homeTeam || !awayTeam || playersJson.length === 0) return;
     await createGame({
-      game_date: date.toISOString(),
+      game_date: date?.toISOString(),
       game_type: 'friendly',
       name: gameName,
-      lineup: JSON.stringify(playersJson),
+      lineup: JSON.stringify(players || playersJson),
       team_a: homeTeam,
       team_b: awayTeam,
       id: params.id,
@@ -71,7 +70,7 @@ export default function CreateGame() {
             <Label>Name of the game</Label>
             <Input
               id="name"
-              placeholder="🍺 Beer competition"
+              placeholder="🍺 Beer competition (optional)"
               className="mt-2"
               value={gameName}
               onChange={(e) => setGameName(e.target.value)}
@@ -81,7 +80,7 @@ export default function CreateGame() {
             <Label>Home team name</Label>
             <Input
               id="name"
-              placeholder="Rusty Nutcrackers"
+              placeholder="Rusty Nutcrackers (optional)"
               className="mt-2"
               value={homeTeam}
               onChange={(e) => setHomeTeam(e.target.value)}
@@ -91,7 +90,7 @@ export default function CreateGame() {
             <Label>Away team name</Label>
             <Input
               id="name"
-              placeholder="Gray old boys"
+              placeholder="Gray old boys (optional)"
               className="mt-2"
               value={awayTeam}
               onChange={(e) => setAwayTeam(e.target.value)}
@@ -106,7 +105,7 @@ export default function CreateGame() {
                   className={`mt-2 justify-start text-left font-normal ${!date && 'text-muted-foreground'}`}
                 >
                   <CalendarIcon />
-                  {date ? format(date, 'PPP') : <span>Pick a date</span>}
+                  {date ? format(date, 'PPP') : <span>Pick a date (optional)</span>}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
@@ -126,7 +125,9 @@ export default function CreateGame() {
           className="mt-2"
         />
         <Button className="mt-4" asChild onClick={() => handleCreateGame()}>
-          <Link href={`?mode=pro`}>Create</Link>
+          <Link href={`/${params.id}/?mode=pro`} replace>
+            Create
+          </Link>
         </Button>
       </div>
       <div className="flex flex-col w-1/4 mt-8">

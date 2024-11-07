@@ -2,15 +2,25 @@ import { useState } from 'react';
 
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useGetHoldsportTeams, useGetHoldsportTeamActivities, useImportPlayers } from '@/app/hooks';
+import {
+  useGetHoldsportTeams,
+  useGetHoldsportTeamActivities,
+  useImportPlayers,
+  useGetHoldsportTeamMembers,
+} from '@/app/hooks';
 
 import type { HoldSportActivity, HoldsportTeam, HoldsportPlayer } from '@/app/types';
 
 export const ImportPlayers = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { data, getTeamsFromHoldsport } = useGetHoldsportTeams();
-  const { data: activities, getTeamActivitiesFromHoldsport } = useGetHoldsportTeamActivities();
+  const { data, getTeamsFromHoldsport, isMutating: isLoadingTeams } = useGetHoldsportTeams();
+  const {
+    data: activities,
+    getTeamActivitiesFromHoldsport,
+    isMutating: isLoadingActivities,
+  } = useGetHoldsportTeamActivities();
+  const { data: teamMembers, getTeamMembersFromHoldsport } = useGetHoldsportTeamMembers();
   const { importPlayers } = useImportPlayers();
 
   const getHoldsportTeams = async () => {
@@ -27,30 +37,55 @@ export const ImportPlayers = () => {
     const players = activity.activities_users.filter(
       (activityUser: HoldsportPlayer) => activityUser.status === 'Attending'
     );
-    importPlayers(players);
+    const mappedPlayersWithProfilePictures = players.map((player) => {
+      const teamMember = teamMembers?.find((teamMember) => player.user_id === teamMember.id);
+      return {
+        id: player.user_id,
+        name: player.name,
+        status: player.status,
+        profile_picture_path: teamMember?.profile_picture_path,
+        user_id: player.user_id,
+      };
+    });
+
+    importPlayers(mappedPlayersWithProfilePictures);
+  };
+
+  const handleGetTeamActivities = async (teamId: number) => {
+    await getTeamMembersFromHoldsport({ email, pw: password, teamId });
+    await getTeamActivitiesFromHoldsport({ email, pw: password, teamId });
   };
 
   return (
     <div>
       <h1>Import from Holdsport</h1>
-      <Input name="email" placeholder="Holdsport email" value={email} onChange={(e) => setEmail(e.target.value)} />
+      <Input
+        name="email"
+        placeholder="Holdsport email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        className="mt-2"
+      />
       <Input
         name="password"
         type="password"
         placeholder="Holdsport password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        className="mt-2"
       />
-      <Button onClick={() => getHoldsportTeams()}>Import</Button>
+      <Button onClick={() => getHoldsportTeams()} className="mt-2" disabled={isLoadingTeams}>
+        Import
+      </Button>
       <ul>
         {data &&
           data.map((team: HoldsportTeam) => (
-            <>
-              <li key={team.id}>{team.name}</li>
-              <Button onClick={() => getTeamActivitiesFromHoldsport({ email, pw: password, teamId: team.id })}>
+            <div key={team.id}>
+              <li>{team.name}</li>
+              <Button onClick={() => handleGetTeamActivities(team.id)} disabled={isLoadingActivities}>
                 Get activities
               </Button>
-            </>
+            </div>
           ))}
       </ul>
       <ul>

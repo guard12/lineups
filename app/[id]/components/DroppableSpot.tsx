@@ -1,5 +1,6 @@
 import { useDrop, useDrag } from 'react-dnd';
 
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import type { PlayerProps } from '@/app/types';
 
 type SpotProps = {
@@ -7,7 +8,7 @@ type SpotProps = {
   onDrop: (id: string, item: { id: string; name: string }) => void;
   onSwap: (item: { id: string; name: string }) => void;
   onRemove: (spotId: string) => void;
-  player?: { id: string; name: string } | null;
+  player?: PlayerProps | null;
   position: string;
   isSubstitue?: boolean;
 };
@@ -29,7 +30,7 @@ export const DroppableSpot: React.FC<SpotProps> = ({ id, onDrop, player, positio
 
   const [{ isDragging }, drag] = useDrag({
     type: 'PLAYER',
-    item: { id: player?.id, name: player?.name },
+    item: { id: player?.id, name: player?.name, profilePictureUrl: player?.profile_picture_path },
     canDrag: !!player, // Only allow drag if there's a player in the spot
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
@@ -64,7 +65,19 @@ export const DroppableSpot: React.FC<SpotProps> = ({ id, onDrop, player, positio
         className={`rounded-md flex flex-col justify-center items-center ${bgColor}`}
         onDoubleClick={handleRemove}
       >
-        {player ? player.name : 'Empty Spot'}
+        {player ? (
+          <div className="flex flex-col items-center">
+            {player.profile_picture_path && (
+              <Avatar>
+                <AvatarImage src={`https://api.holdsport.dk${player.profile_picture_path}`} />
+                <AvatarFallback>PL</AvatarFallback>
+              </Avatar>
+            )}
+            {player.name}
+          </div>
+        ) : (
+          'Empty Spot'
+        )}
       </div>
     </div>
   );

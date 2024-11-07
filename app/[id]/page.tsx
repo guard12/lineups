@@ -152,7 +152,14 @@ export default function CreateLineup() {
           <Label className="font-bold">Players ({players.length})</Label>
           {players &&
             players.map((player: PlayerProps) => {
-              return <DraggablePlayer key={player.id} id={player.id} name={player.name} />;
+              return (
+                <DraggablePlayer
+                  key={player.id}
+                  id={player.id}
+                  name={player.name}
+                  profile_picture_path={player.profile_picture_path}
+                />
+              );
             })}
         </div>
         <div className="flex flex-col gap-2 ml-2">

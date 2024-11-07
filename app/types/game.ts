@@ -2,10 +2,10 @@ import type { PlayerProps } from './player';
 
 export type GameDataRequest = {
   id?: string;
-  name: string;
-  team_a: string;
-  team_b: string;
-  game_date: string;
+  name?: string;
+  team_a?: string;
+  team_b?: string;
+  game_date?: string;
   description?: string;
   game_type: 'friendly' | 'league';
   lineup: string;
@@ -23,5 +23,5 @@ export type GameDataResponse = {
 };
 
 export type Spots = {
-  [key: string]: { id: string; name: string } | null;
+  [key: string]: PlayerProps | null;
 };
