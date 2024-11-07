@@ -69,7 +69,7 @@ export default function CreateGame() {
           <div>
             <Label>Name of the game</Label>
             <Input
-              id="name"
+              id="game-name"
               placeholder="🍺 Beer competition (optional)"
               className="mt-2"
               value={gameName}
@@ -79,7 +79,7 @@ export default function CreateGame() {
           <div>
             <Label>Home team name</Label>
             <Input
-              id="name"
+              id="home-team-name"
               placeholder="Rusty Nutcrackers (optional)"
               className="mt-2"
               value={homeTeam}
@@ -89,7 +89,7 @@ export default function CreateGame() {
           <div>
             <Label>Away team name</Label>
             <Input
-              id="name"
+              id="away-team-name"
               placeholder="Gray old boys (optional)"
               className="mt-2"
               value={awayTeam}
